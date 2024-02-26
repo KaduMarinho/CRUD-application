@@ -10,7 +10,8 @@ class Category extends Component
     public $categories, $name, $description, $category_id;
     public $updateCategory = false;
     protected $listeners = [
-        'deleteCategory'=>'destroy'
+        //'deleteCategory'=>'destroy'
+        'deleteCategory'=>'deletar'
     ];
     // Validation Rules
     protected $rules = [
@@ -19,7 +20,7 @@ class Category extends Component
     ];
     public function render()
     {
-        $this->categories = Categories::select('id','name','description')->get();
+        $this->categories = Categories::select('id','name','description')->where('status', True)->get();
         return view('livewire.category');
     }
     public function resetFields(){
@@ -82,6 +83,21 @@ class Category extends Component
             session()->flash('success',"Category Deleted Successfully!!");
         }catch(\Exception $e){
             session()->flash('error',"Something goes wrong while deleting category!!");
+        }
+    }
+    public function deletar($id){        
+        try{
+            // Soft delete category
+            $category = Categories::findOrFail($id);
+            $category->status = False;            
+            $category->save();
+
+            session()->flash('delete','Category was Deleted!!');
+    
+            $this->cancel();
+        }catch(\Exception $e){
+            session()->flash('error','Something goes wrong while deleting category!!');
+            $this->cancel();
         }
     }
 }

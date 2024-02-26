@@ -10,8 +10,13 @@
                         </div>
                     @endif
                     @if(session()->has('error'))
-                        <div class="alert alert-danger" role="alert">
+                        <div class="alert alert-warning" role="alert">
                             {{ session()->get('error') }}
+                        </div>
+                    @endif
+                    @if(session()->has('delete'))
+                        <div class="alert alert-danger" role="alert">
+                            {{ session()->get('delete') }}
                         </div>
                     @endif
                     @if($updateCategory)
