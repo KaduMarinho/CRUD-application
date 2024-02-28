@@ -11,7 +11,8 @@ class Category extends Component
     public $updateCategory = false;
     protected $listeners = [
         //'deleteCategory'=>'destroy'
-        'deleteCategory'=>'deletar'
+        'deleteCategory'=>'deletar',
+        'deleteAllCategory'=>'deletarAll'
     ];
     // Validation Rules
     protected $rules = [
@@ -96,6 +97,23 @@ class Category extends Component
     
             $this->cancel();
         }catch(\Exception $e){
+            session()->flash('error','Something goes wrong while deleting category!!');
+            $this->cancel();
+        }
+    }
+    public function deletarAll($ids){        
+        try{
+            // Soft delete all categories            
+            foreach($ids as $id){
+                $category = Categories::findOrFail($id);                               
+                $category->status = False;            
+                $category->save();
+            }            
+
+            session()->flash('delete','All Categories were Deleted!!');
+    
+            $this->cancel();
+        }catch(\Exception $e){            
             session()->flash('error','Something goes wrong while deleting category!!');
             $this->cancel();
         }

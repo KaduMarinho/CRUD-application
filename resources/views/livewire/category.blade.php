@@ -41,7 +41,13 @@
                             </thead>
                             <tbody>
                                 @if (count($categories) > 0)
-                                    @foreach ($categories as $category)
+                                    @php
+                                        $ids = array();
+                                    @endphp                                    
+                                    @foreach ($categories as $category) 
+                                        @php
+                                            array_push($ids, $category->id);                                   
+                                        @endphp                                           
                                         <tr>
                                             <td>
                                                 {{$category->name}}
@@ -53,15 +59,18 @@
                                                 <button wire:click="edit({{$category->id}})" class="btn btn-primary btn-sm">Edit</button>
                                                 <button onclick="deleteCategory({{$category->id}})" class="btn btn-danger btn-sm">Delete</button>
                                             </td>
-                                        </tr>
-                                    @endforeach
+                                        </tr>                                        
+                                    @endforeach                                    
+                                    <tr>
+                                        <td><button onclick="deleteAllCategory({{json_encode($ids)}})" class="btn btn-danger btn-sm">Delete All</button></td>
+                                    </tr>
                                 @else
                                     <tr>
                                         <td colspan="3" align="center">
                                             No Categories Found.
                                         </td>
                                     </tr>
-                                @endif
+                                @endif                                    
                             </tbody>
                         </table>
                     </div>
@@ -73,6 +82,12 @@
                 if(confirm("Are you sure to delete this record?"))
                     window.livewire.emit('deleteCategory',id);
             }
+
+            function deleteAllCategory(ids){                
+                if(confirm("Are you sure to delete all records?"))
+                    window.livewire.emit('deleteAllCategory',ids);
+            }
+            
         </script>
     </div>
 </div>
